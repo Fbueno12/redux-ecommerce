@@ -33,5 +33,6 @@ module.exports = {
     ],
     'import/prefer-default-export': 'off',
     'react/static-property-placement': 'off',
+    'jsx-a11y/control-has-associated-label': 'off'
   },
 };
