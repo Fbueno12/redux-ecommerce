@@ -1,100 +1,46 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { MdAddShoppingCart } from 'react-icons/md';
+import { formatPrice } from '../../util/format';
+import api from '../../services/api';
+
 import { ProductList } from './styles';
 
-export default function Home() {
-    return (
-        <ProductList>
-            <li>
-                <img
-                    src="https://rukminim1.flixcart.com/image/714/857/jmwch3k0/shoe/j/y/n/dg-292-white-blue-patti-10-digitrendzz-white-original-imaf9p36fkykfjqt.jpeg?q=50"
-                    alt="Tenis"
-                />
-                <strong>Tênis muito legal</strong>
-                <span>R$129,90</span>
+export default class Home extends Component {
+    state = {
+        products: [],
+    };
 
-                <button type="button">
-                    <div>
-                        <MdAddShoppingCart size={16} color="#FFF" />
-                    </div>
-                    <span>ADICIONAR AO CARRINHO</span>
-                </button>
-            </li>
-            <li>
-                <img
-                    src="https://rukminim1.flixcart.com/image/714/857/jmwch3k0/shoe/j/y/n/dg-292-white-blue-patti-10-digitrendzz-white-original-imaf9p36fkykfjqt.jpeg?q=50"
-                    alt="Tenis"
-                />
-                <strong>Tênis muito legal</strong>
-                <span>R$129,90</span>
+    async componentDidMount() {
+        const response = await api.get('products');
 
-                <button type="button">
-                    <div>
-                        <MdAddShoppingCart size={16} color="#FFF" />
-                    </div>
-                    <span>ADICIONAR AO CARRINHO</span>
-                </button>
-            </li>
-            <li>
-                <img
-                    src="https://rukminim1.flixcart.com/image/714/857/jmwch3k0/shoe/j/y/n/dg-292-white-blue-patti-10-digitrendzz-white-original-imaf9p36fkykfjqt.jpeg?q=50"
-                    alt="Tenis"
-                />
-                <strong>Tênis muito legal</strong>
-                <span>R$129,90</span>
+        const data = response.data.map(product => ({
+            ...product,
+            priceFormatted: formatPrice(product.price),
+        }));
 
-                <button type="button">
-                    <div>
-                        <MdAddShoppingCart size={16} color="#FFF" />
-                    </div>
-                    <span>ADICIONAR AO CARRINHO</span>
-                </button>
-            </li>
-            <li>
-                <img
-                    src="https://rukminim1.flixcart.com/image/714/857/jmwch3k0/shoe/j/y/n/dg-292-white-blue-patti-10-digitrendzz-white-original-imaf9p36fkykfjqt.jpeg?q=50"
-                    alt="Tenis"
-                />
-                <strong>Tênis muito legal</strong>
-                <span>R$129,90</span>
+        this.setState({ products: data });
+    }
 
-                <button type="button">
-                    <div>
-                        <MdAddShoppingCart size={16} color="#FFF" />
-                    </div>
-                    <span>ADICIONAR AO CARRINHO</span>
-                </button>
-            </li>
-            <li>
-                <img
-                    src="https://rukminim1.flixcart.com/image/714/857/jmwch3k0/shoe/j/y/n/dg-292-white-blue-patti-10-digitrendzz-white-original-imaf9p36fkykfjqt.jpeg?q=50"
-                    alt="Tenis"
-                />
-                <strong>Tênis muito legal</strong>
-                <span>R$129,90</span>
+    render() {
+        const { products } = this.state;
 
-                <button type="button">
-                    <div>
-                        <MdAddShoppingCart size={16} color="#FFF" />
-                    </div>
-                    <span>ADICIONAR AO CARRINHO</span>
-                </button>
-            </li>
-            <li>
-                <img
-                    src="https://images-na.ssl-images-amazon.com/images/I/91bQYhS1yQL._UX500_.jpg"
-                    alt="Tenis"
-                />
-                <strong>Tênis muito legal</strong>
-                <span>R$129,90</span>
+        return (
+            <ProductList>
+                {products.map(product => (
+                    <li key={product.id}>
+                        <img src={product.image} alt={product.title} />
+                        <strong>{product.title}</strong>
+                        <span>{product.priceFormatted}</span>
 
-                <button type="button">
-                    <div>
-                        <MdAddShoppingCart size={16} color="#FFF" />
-                    </div>
-                    <span>ADICIONAR AO CARRINHO</span>
-                </button>
-            </li>
-        </ProductList>
-    );
+                        <button type="button">
+                            <div>
+                                <MdAddShoppingCart size={16} color="#FFF" />
+                            </div>
+                            <span>ADICIONAR AO CARRINHO</span>
+                        </button>
+                    </li>
+                ))}
+            </ProductList>
+        );
+    }
 }
